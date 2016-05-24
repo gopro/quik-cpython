@@ -379,6 +379,9 @@ then
 	*-*-cygwin*)
 		ac_sys_system=Cygwin
 		;;
+	*-*-darwin*)
+		ac_sys_system=Darwin
+		;;
 	*)
 		# for now, limit cross builds to known configurations
 		MACHDEP="unknown"
@@ -422,6 +425,15 @@ if test "$cross_compiling" = yes; then
 		;;
 	*-*-cygwin*)
 		_host_cpu=
+		;;
+	*-*-darwin*)
+		case "$host_cpu" in
+		arm*)
+			_host_cpu=arm
+			;;
+		*)
+			_host_cpu=$host_cpu
+		esac
 		;;
 	*)
 		# for now, limit cross builds to known configurations
@@ -1209,7 +1221,6 @@ if test "$cross_compiling" = yes; then
     esac
 fi
 AC_SUBST(READELF)
-
 
 case $MACHDEP in
 hp*|HP*)
