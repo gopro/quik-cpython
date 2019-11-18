@@ -569,9 +569,6 @@
 /* Define to 1 if you have the `resolv' library (-lresolv). */
 #undef HAVE_LIBRESOLV
 
-/* Define to 1 if you have the `sendfile' library (-lsendfile). */
-#undef HAVE_LIBSENDFILE
-
 /* Define to 1 if you have the <libutil.h> header file. */
 #undef HAVE_LIBUTIL_H
 
@@ -830,9 +827,6 @@
 /* Define to 1 if you have the `sem_unlink' function. */
 #undef HAVE_SEM_UNLINK
 
-/* Define to 1 if you have the `sendfile' function. */
-#undef HAVE_SENDFILE
-
 /* Define to 1 if you have the `setegid' function. */
 #undef HAVE_SETEGID
 
@@ -1081,9 +1075,6 @@
 
 /* Define to 1 if you have the <sys/select.h> header file. */
 #undef HAVE_SYS_SELECT_H
-
-/* Define to 1 if you have the <sys/sendfile.h> header file. */
-#undef HAVE_SYS_SENDFILE_H
 
 /* Define to 1 if you have the <sys/socket.h> header file. */
 #undef HAVE_SYS_SOCKET_H
