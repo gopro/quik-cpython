@@ -3,6 +3,7 @@
 import os
 import re
 import sys
+import subprocess
 
 __all__ = [
     'compiler_fixup',
@@ -68,7 +69,7 @@ def _read_output(commandstring):
 
     with contextlib.closing(fp) as fp:
         cmd = "%s 2>/dev/null >'%s'" % (commandstring, fp.name)
-        return fp.read().decode('utf-8').strip() if not os.system(cmd) else None
+        return fp.read().decode('utf-8').strip() if not subprocess.call(cmd, shell=True) else None
 
 
 def _find_build_tool(toolname):

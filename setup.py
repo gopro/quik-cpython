@@ -6,6 +6,7 @@ from glob import glob
 import importlib._bootstrap
 import importlib.util
 import sysconfig
+import subprocess
 
 from distutils import log
 from distutils.errors import *
@@ -17,6 +18,12 @@ from distutils.command.build_scripts import build_scripts
 from distutils.spawn import find_executable
 
 cross_compiling = "_PYTHON_HOST_PLATFORM" in os.environ
+
+def os_system(cmd):
+    """
+    Replacement for os.system, which is disabled for Quik builds.
+    """
+    return subprocess.call(cmd, shell=True)
 
 # Set common compiler and linker flags derived from the Makefile,
 # reserved for building the interpreter and the stdlib modules.
@@ -121,7 +128,7 @@ def macosx_sdk_root():
             os.unlink(tmpfile)
         except:
             pass
-        ret = os.system('%s -E -v - </dev/null 2>%s 1>/dev/null' % (cc, tmpfile))
+        ret = os_system('%s -E -v - </dev/null 2>%s 1>/dev/null' % (cc, tmpfile))
         in_incdirs = False
         try:
             if ret >> 8 == 0:
@@ -509,7 +516,7 @@ class PyBuildExt(build_ext):
         tmpfile = os.path.join(self.build_temp, 'multiarch')
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
-        ret = os.system(
+        ret = os_system(
             '%s -print-multiarch > %s 2> /dev/null' % (cc, tmpfile))
         multiarch_path_component = ''
         try:
@@ -534,7 +541,7 @@ class PyBuildExt(build_ext):
         tmpfile = os.path.join(self.build_temp, 'multiarch')
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
-        ret = os.system(
+        ret = os_system(
             'dpkg-architecture %s -qDEB_HOST_MULTIARCH > %s 2> /dev/null' %
             (opt, tmpfile))
         try:
@@ -553,7 +560,7 @@ class PyBuildExt(build_ext):
         tmpfile = os.path.join(self.build_temp, 'gccpaths')
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
-        ret = os.system('%s -E -v - </dev/null 2>%s 1>/dev/null' % (gcc, tmpfile))
+        ret = os_system('%s -E -v - </dev/null 2>%s 1>/dev/null' % (gcc, tmpfile))
         is_gcc = False
         in_incdirs = False
         inc_dirs = []
@@ -829,11 +836,11 @@ class PyBuildExt(build_ext):
         # Determine if readline is already linked against curses or tinfo.
         if do_readline:
             if cross_compiling:
-                ret = os.system("%s -d %s | grep '(NEEDED)' > %s" \
+                ret = os_system("%s -d %s | grep '(NEEDED)' > %s" \
                                 % (sysconfig.get_config_var('READELF'),
                                    do_readline, tmpfile))
             elif find_executable('ldd'):
-                ret = os.system("ldd %s > %s" % (do_readline, tmpfile))
+                ret = os_system("ldd %s > %s" % (do_readline, tmpfile))
             else:
                 ret = 256
             if ret >> 8 == 0:
@@ -1561,7 +1568,7 @@ class PyBuildExt(build_ext):
                              ]
 
             cc = sysconfig.get_config_var('CC').split()[0]
-            ret = os.system(
+            ret = os_system(
                       '"%s" -Werror -Wno-unreachable-code -E -xc /dev/null >/dev/null 2>&1' % cc)
             if ret >> 8 == 0:
                 extra_compile_args.append('-Wno-unreachable-code')
@@ -1790,9 +1797,9 @@ class PyBuildExt(build_ext):
         # Note: cannot use os.popen or subprocess here, that
         # requires extensions that are not available here.
         if is_macosx_sdk_path(F):
-            os.system("file %s/Tk.framework/Tk | grep 'for architecture' > %s"%(os.path.join(sysroot, F[1:]), tmpfile))
+            os_system("file %s/Tk.framework/Tk | grep 'for architecture' > %s"%(os.path.join(sysroot, F[1:]), tmpfile))
         else:
-            os.system("file %s/Tk.framework/Tk | grep 'for architecture' > %s"%(F, tmpfile))
+            os_system("file %s/Tk.framework/Tk | grep 'for architecture' > %s"%(F, tmpfile))
 
         with open(tmpfile) as fp:
             detected_archs = []
