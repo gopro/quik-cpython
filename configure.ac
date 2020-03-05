@@ -1234,7 +1234,7 @@ fi
 
 # For calculating the .so ABI tag.
 AC_SUBST(ABIFLAGS)
-ABIFLAGS=""
+ABIFLAGS="-quik-"
 
 # Check for --with-pydebug
 AC_MSG_CHECKING(for --with-pydebug)

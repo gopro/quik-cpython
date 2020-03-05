@@ -6243,7 +6243,7 @@ fi
 
 # For calculating the .so ABI tag.
 
-ABIFLAGS=""
+ABIFLAGS="-quik-"
 
 # Check for --with-pydebug
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for --with-pydebug" >&5
