@@ -2581,41 +2581,7 @@ def _proxy_bypass_macosx_sysconf(host, proxy_settings):
     return False
 
 
-if sys.platform == 'darwin':
-    from _scproxy import _get_proxy_settings, _get_proxies
-
-    def proxy_bypass_macosx_sysconf(host):
-        proxy_settings = _get_proxy_settings()
-        return _proxy_bypass_macosx_sysconf(host, proxy_settings)
-
-    def getproxies_macosx_sysconf():
-        """Return a dictionary of scheme -> proxy server URL mappings.
-
-        This function uses the MacOSX framework SystemConfiguration
-        to fetch the proxy information.
-        """
-        return _get_proxies()
-
-
-
-    def proxy_bypass(host):
-        """Return True, if host should be bypassed.
-
-        Checks proxy settings gathered from the environment, if specified,
-        or from the MacOSX framework SystemConfiguration.
-
-        """
-        proxies = getproxies_environment()
-        if proxies:
-            return proxy_bypass_environment(host, proxies)
-        else:
-            return proxy_bypass_macosx_sysconf(host)
-
-    def getproxies():
-        return getproxies_environment() or getproxies_macosx_sysconf()
-
-
-elif os.name == 'nt':
+if os.name == 'nt':
     def getproxies_registry():
         """Return a dictionary of scheme -> proxy server URL mappings.
 
